@@ -108,7 +108,7 @@ class MaxFileUtils(FileUtils):
     def __init__(self, filename):
         FileUtils.__init__(self)
         self._filename = filename
-        self._file_path = os.path.join(FileConsts.BASE_LOCATION, filename)
+        self._file_path = 'mock.xlsx'
         self._file_df = pd.read_excel(self._file_path, skiprows=3)
         # self._abroad_file_df = pd.read_excel(self._file_path, sheet_name='עסקאות חו"ל ומט"ח', skiprows=3)
 
