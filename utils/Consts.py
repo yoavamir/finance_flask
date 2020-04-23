@@ -2,7 +2,7 @@ class FileConsts:
     def __init__(self):
         pass
 
-    BASE_LOCATION = 'files/'
+    BASE_LOCATION = 'files'
     TRANSACTION_DATE = 'transaction_date'
     TRANSACTION_AMOUNT = 'transaction_amount'
     SHOP_NAME_HEBREW = 'שם בית העסק'
