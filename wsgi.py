@@ -12,7 +12,7 @@ from utils.Consts import FileConsts
 from utils.Utils import MaxFileUtils, FileUtils
 
 # @app.route('/')
-# @app.route('/index')
+# @app.route('/index')`
 # def index():
 #     return "Hello, World!"
 #
