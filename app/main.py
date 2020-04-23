@@ -17,6 +17,13 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+app.register_blueprint(amount_blueprint)
+app.register_blueprint(split_by_shop_blueprint)
+app.register_blueprint(spent_by_day_blueprint)
+app.register_blueprint(category_distribution_blueprint)
+app.register_blueprint(time_range_blueprint)
+app.register_blueprint(spent_by_month_blueprint)
+app.register_blueprint(shops_by_months_blueprint)
 
 @app.route('/')
 @app.route('/index')
