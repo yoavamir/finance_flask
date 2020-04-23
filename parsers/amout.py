@@ -11,4 +11,4 @@ amount_blueprint = Blueprint('amount_blueprint', __name__)
 def get_amount():
     file_utils = FileUtils()
     amount = file_utils.combined_df.transaction_amount
-    return jsonify(amount.sum())
+    return jsonify(int(amount.sum()))
