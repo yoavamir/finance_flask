@@ -12,11 +12,16 @@ def get_combined_df():
                                                         FileConsts.TRANSACTION_AMOUNT}]
     file_5121_4048 = MaxFileUtils('5121_4048.xlsx').prepare_df()[{FileConsts.SHOP_NAME, FileConsts.TRANSACTION_DATE,
                                                                   FileConsts.TRANSACTION_AMOUNT}]
-    abroad_file_5121_4048 = MaxFileUtils('5121_4048.xlsx').prepare_abroad_df()[
-        {FileConsts.SHOP_NAME, FileConsts.TRANSACTION_DATE, FileConsts.TRANSACTION_AMOUNT}]
-    combined_df = file_2356.append([file_9973, file_5121_4048, abroad_file_5121_4048], ignore_index=True)
+    # abroad_file_5121_4048 = MaxFileUtils('5121_4048.xlsx').prepare_abroad_df()[
+    #     {FileConsts.SHOP_NAME, FileConsts.TRANSACTION_DATE, FileConsts.TRANSACTION_AMOUNT}]
+    combined_df = file_2356.append([file_9973, file_5121_4048], ignore_index=True)
     return combined_df
 
+
+def get_mock_df():
+    mock_df = MaxFileUtils('mock.xlsx').prepare_df()[{FileConsts.SHOP_NAME, FileConsts.TRANSACTION_DATE,
+                                                                  FileConsts.TRANSACTION_AMOUNT}]
+    return mock_df
 
 def get_amount_from_cell(cell):
     split = cell.split(' ')
@@ -31,7 +36,7 @@ class FileUtils:
     @property
     def combined_df(self):
         if self._combined_df is None:
-            self._combined_df = get_combined_df()
+            self._combined_df = get_mock_df()
         return self._combined_df
 
     def get_months_from_file(self):
@@ -105,31 +110,34 @@ class MaxFileUtils(FileUtils):
         self._filename = filename
         self._file_path = os.path.join(FileConsts.BASE_LOCATION, filename)
         self._file_df = pd.read_excel(self._file_path, skiprows=3)
-        self._abroad_file_df = pd.read_excel(self._file_path, sheet_name='עסקאות חו"ל ומט"ח', skiprows=3)
+        # self._abroad_file_df = pd.read_excel(self._file_path, sheet_name='עסקאות חו"ל ומט"ח', skiprows=3)
 
     @property
     def file_df(self):
         return self._file_df
 
-    @property
-    def abroad_file_df(self):
-        return self._abroad_file_df
+    # @property
+    # def abroad_file_df(self):
+    #     return self._abroad_file_df
 
     def prepare_df(self):
         file_df = self._file_df.copy(deep=True)
         file_df = file_df.rename(columns={MAXFileConsts.TRANSACTION_DATE_HEBREW: MAXFileConsts.TRANSACTION_DATE,
                                           MAXFileConsts.SHOP_NAME_HEBREW: MAXFileConsts.SHOP_NAME,
                                           MAXFileConsts.TRANSACTION_AMOUNT_HEBREW: MAXFileConsts.TRANSACTION_AMOUNT})
+        file_df[MAXFileConsts.TRANSACTION_DATE] = file_df[MAXFileConsts.TRANSACTION_DATE].replace(0, '07-05-2019')
+
         file_df[MAXFileConsts.TRANSACTION_DATE] = file_df[MAXFileConsts.TRANSACTION_DATE].apply(lambda x: x[3:])
+
         return file_df
 
-    def prepare_abroad_df(self):
-        file_df = self._abroad_file_df.copy(deep=True)
-        file_df = file_df.rename(columns={MAXFileConsts.TRANSACTION_DATE_HEBREW: MAXFileConsts.TRANSACTION_DATE,
-                                          MAXFileConsts.SHOP_NAME_HEBREW: MAXFileConsts.SHOP_NAME,
-                                          MAXFileConsts.TRANSACTION_AMOUNT_HEBREW: MAXFileConsts.TRANSACTION_AMOUNT})
-        file_df[MAXFileConsts.TRANSACTION_DATE] = file_df[MAXFileConsts.TRANSACTION_DATE].apply(lambda x: x[3:])
-        return file_df
+    # def prepare_abroad_df(self):
+    #     file_df = self._abroad_file_df.copy(deep=True)
+    #     file_df = file_df.rename(columns={MAXFileConsts.TRANSACTION_DATE_HEBREW: MAXFileConsts.TRANSACTION_DATE,
+    #                                       MAXFileConsts.SHOP_NAME_HEBREW: MAXFileConsts.SHOP_NAME,
+    #                                       MAXFileConsts.TRANSACTION_AMOUNT_HEBREW: MAXFileConsts.TRANSACTION_AMOUNT})
+    #     file_df[MAXFileConsts.TRANSACTION_DATE] = file_df[MAXFileConsts.TRANSACTION_DATE].apply(lambda x: x[3:])
+    #     return file_df
 
     def get_months_from_file(self):
         file_df = self._file_df.copy(deep=True)
@@ -153,5 +161,5 @@ class MaxFileUtils(FileUtils):
 
 
 if __name__ == '__main__':
-    get_combined_df()
+    a = get_mock_df()
     print(1)
