@@ -9,6 +9,7 @@ from parsers.spent_by_month import spent_by_month_blueprint
 from parsers.shops_by_months import shops_by_months_blueprint
 from utils.Consts import FileConsts
 from utils.Utils import MaxFileUtils, FileUtils
+from files.FileList import FileList
 
 import os
 
@@ -36,21 +37,33 @@ def index():
 def upload_file():
     print(request.form)
     f = request.files['file']
-    path_to_file = os.path.join(FileConsts.BASE_LOCATION, f.filename)
-    f.save(path_to_file)
-    file_utils = MaxFileUtils(f.filename)
+    file_list = FileList()
+    file_list.append_to_list(f.filename)
+    return jsonify(file_list.saved_files)
+
+
+@app.route('/init_expense_data', methods=['POST'])
+@cross_origin()
+def init_expense_data():
+    file_utils = FileUtils()
     months = file_utils.get_months_from_file()
-    shops = file_utils.get_shops_from_file()
-    return jsonify(f.filename, months, shops)
+    return jsonify(months)
 
 
-@app.route('/init_data', methods=['POST'])
+@app.route('/init_data', methods=['GET'])
 @cross_origin()
 def init_data():
     file_utils = FileUtils()
     months = file_utils.get_months_from_file()
     shops = file_utils.get_shops_from_file()
     return jsonify(months, shops)
+
+
+@app.route('/get_files', methods=['GET'])
+@cross_origin()
+def get_files():
+    files_list = FileList()
+    return jsonify(files_list.saved_files)
 
 
 # if __name__ == '__main__':
